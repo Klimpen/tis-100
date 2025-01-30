@@ -15,7 +15,6 @@ class instruction_set:
         # pc should not change if it's in access lock
 
         dst = src
-        core.success = True
 
 
     # 001
@@ -23,30 +22,39 @@ class instruction_set:
         # checks to see if the src has something to fetch
         # returns 0 if it does not
         # returns 1 if it does
-        pass 
+        if src:
+            core.result = 1
+        else:
+            core.result = 0
+
 
     # 010 - bit shift left
     def bsl(core, dst):
         # swizzle or append 0, unsure which
-        pass
+        # current append 0
+        dst << 1
 
     # 011 - compare
     def cmp(core, dst, src):
         # returns   +1 if dst > src
         # returns   -1 if dst < src
         # returns +/-0 if dst = src
-        pass
+        if dst - src > 0:
+            core.result = 1
+        if dst - src < 0:
+            core.result = -1
+        if dst - src == 0:
+            core.result = 0
 
     # 100
     def add(core, dst, src):
         # sets dst = dst + src
         dst += src
-        core.success = True
 
     # 101
     def xor(core, dst, src):
         # sets dst = dst xor src
-        pass
+        dst = dst ^ src
 
     # 110
     def jez(core, dst, src):
@@ -63,8 +71,6 @@ class instruction_set:
         if src > 0:
             core.program_counter = dst
             core.success = False # dont increment the PC as we've set it manually
-        else:
-            core.success = True
 
     def decode(core, instruction):
         print("decoding")

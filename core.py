@@ -12,7 +12,7 @@ class Core():
         self.bak = 0
 
         self.result = None # set to None at the end of each instruction
-        self.success = False # False = do not increment program_counter; True = increment program_counter
+        self.success = True # DEFAULT = TRUE, reset to True each tick. False = do not increment program_counter; True = increment program_counter
 
         self.left = None # containts a reference to another core - is this the best way to do this? 
         self.right = None # would it make more sense to have a different object which can handle the transmission of data core-core?
@@ -24,6 +24,7 @@ class Core():
 
     #TODO: update this to use add()
     def update(self):
-        print("updating")
         if self.success:
             self.program_counter += 1
+        else:
+            self.success = True
