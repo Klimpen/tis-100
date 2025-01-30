@@ -14,8 +14,8 @@ class Core():
         self.result = None # set to None at the end of each instruction
         self.success = False # False = do not increment program_counter; True = increment program_counter
 
-        self.left = None
-        self.right = None
+        self.left = None # containts a reference to another core - is this the best way to do this? 
+        self.right = None # would it make more sense to have a different object which can handle the transmission of data core-core?
         self.up = None
         self.down = None
 
