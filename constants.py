@@ -36,3 +36,12 @@ MA  = 0x1111 #memory address
 
 CORES_WIDTH = 6
 CORES_HEIGHT = 4
+
+# STRUCTS
+# A byte is 11 bits in this architecture
+# Each instruction is 1 byte
+#   [3bit][4bit][4bit]
+#   instruction - dst address - src address
+
+class Byte():
+    value = None

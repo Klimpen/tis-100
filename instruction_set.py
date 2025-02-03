@@ -1,9 +1,9 @@
-from constants import *
+from main import *
 
 # need to think about how to do multiple immediates from a function call
 # TODO rewrite these to use eachother where possible - or at least binary operators rather than inbuilt pythong stuff
 
-class instruction_set:
+class Instruction_Set:
     # 000
     def mov(core, dst, src):
         # places the value of src in dst
@@ -14,6 +14,8 @@ class instruction_set:
 
         # pc should not change if it's in access lock
 
+        # TODO
+
         dst = src
 
 
@@ -22,6 +24,8 @@ class instruction_set:
         # checks to see if the src has something to fetch
         # returns 0 if it does not
         # returns 1 if it does
+
+        # TODO - figure out how this works in actual implementation
         if src:
             core.result = 1
         else:
@@ -30,7 +34,7 @@ class instruction_set:
 
     # 010 - bit shift left
     def bsl(core, dst):
-        # swizzle or append 0, unsure which
+        # TODO swizzle or append 0, unsure which
         # current append 0
         dst << 1
 
@@ -73,4 +77,12 @@ class instruction_set:
             core.success = False # dont increment the PC as we've set it manually
 
     def decode(core, instruction):
-        print("decoding")
+        # TODO figure this
+        # break instruction into [3bit][4bit][4bit] = instruction + dst_byte + src_byte
+        # implement this as match [instruction] case: instruction([dst_byte], [src_byte])
+
+
+
+        # TODO figure immediate
+        # TODO figure memget
+        print(f"decoding: {core.program_counter}, {instruction}")
