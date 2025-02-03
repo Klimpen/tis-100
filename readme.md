@@ -61,15 +61,15 @@ The result is written to the `[DST]` register.
 
 ### 110 JEZ
 
-`JEZ [DST][SRC]` performs an absolute jump to the instruction at the address in the `[SRC]` register if the value in the `[DST]` register is zero.
+`JEZ [DST][SRC]` performs an absolute jump to the instruction at the address in the `[DST]` register if the value in the `[SRC]` register is zero.
 
-This sets the `PC` register to the value in the `[SRC]` register.
+This sets the `PC` register to the value in the `[DST]` register.
 
 ### 111 JGZ
 
-`JGZ [DST][SRC]` performs an absolute jump to the instruction at the address in the `[SRC]` register if the value in the `[DST]` register is greater than zero.
+`JGZ [DST][SRC]` performs an absolute jump to the instruction at the address in the `[DST]` register if the value in the `[SRC]` register is greater than zero.
 
-This sets the `PC` register to the value in the `[SRC]` register.
+This sets the `PC` register to the value in the `[DST]` register.
 
 ## Literals
 
