@@ -333,11 +333,7 @@ _ 00000 00000 2^10 BYTE
 ## Notes
 
 - Cycles are synchronized between all cores.
-
 - All computation happens simultaneously. Then, all `PC` registers are updated simultaneously.
-
 - If the system's state is exactly the same as the previous one, without waiting for external I/O, an error indicating a deadlock is raised.
-
 - If a core needs to look off the "edge" of the grid while linking to an adjacent core, it wraps around to the core on the other end of the same row/column.
-
 - `PC` will automatically wrap to the start of the program, if it would auto-increment past the end of the program. Writing an out of bounds value to `PC` is an error. Writing to `IMM` cannot change the size of the program at runtime.
