@@ -45,19 +45,19 @@ one for the destination `[DST]`, then one for the source `[SRC]`. All operators 
 It is an error to provide a register other than `UP`, `DOWN`, `LEFT`, `RIGHT`, `ANY`, `ALL`, or `LAST` as the source.
 
 The result is written to a temporary register whose result is:
-    Usable in the next cycle.
-    Then cleared.
+- Usable in the next cycle.
+- Then cleared.
 
-    This temporary register is shared with CMP
-
-     1 if a value is immediately available.
-     0 if a value is not immediately available.
+- This temporary register is shared with CMP
+- 1 if a value is immediately available.
+- 0 if a value is not immediately available.
 
 ### 010 BSL
 
 Reserved for future specification.
 
 Current plan is Bit Shift Left.
+
 Unsure if swizzle or append 0 is the most useful approach.
 
 ### 011 CMP
@@ -65,14 +65,14 @@ Unsure if swizzle or append 0 is the most useful approach.
 `CMP [DST][SRC]` compares the values in the `[SRC]` and `[DST]` registers.
 
 The result is written to a temporary register whose result is:
-    Usable in the next cycle.
-    Then cleared.
+- Usable in the next cycle.
+- Then cleared.
 
-    This temporary register is shared with HAS
+This temporary register is shared with HAS
 
-+1 if `[DST]` is larger than `[SRC]`
- 0 if `[DST]` is equal to `[SRC]`
--1 if `[DST]` is smaller than `[SRC]`
+- +1 if `[DST]` is larger than `[SRC]`
+-  0 if `[DST]` is equal to `[SRC]`
+- -1 if `[DST]` is smaller than `[SRC]`
 
 ### 100 ADD
 
@@ -101,13 +101,17 @@ This sets the `PC` register to the value in the `[DST]` register.
 ## Literals
 
 The `IMM` register resolves to the value in the space immediately after the current instruction, as represented by `PC`.
+
 This means that an instruction can have a value after itself, and read from this value as a literal by reading from the `IMM` register.
+
 `PC` is incremented with every `IMM` access. Control flow continues to the next instruction not read as a literal, unless `PC` is modified by this instruction directly.
+
 This means it is valid to have literals in program code which do not represent a meaningful instruction.
 
 ## Metaprogramming
 
 Macros compose common reusable functionality from the basic instructions. Macros are strictly metaprogramming.
+
 A macro is executed in the number of cycles it takes to execute the underlying instructions.
 
 The following are some examples of how to compose instructions:
@@ -249,10 +253,9 @@ The second inter-core alias. `LAST`represents the register corresponding to the 
 
 The sixth inter-core register. `ALL` represents communication with all adjacent cores.
 
-Writing to `ALL` causes the current core to block, repeating transmission on every cycle without executing additional
-code until all adjacent cores have read the value from their directional register corresponding to this core.
-An adjacent core cannot read from the same `ALL` transmission more than once. It will instead block until the next
-distinct instruction writing to `ALL` or its specific directional register.
+Writing to `ALL` causes the current core to block, repeating transmission on every cycle without executing additional code until all adjacent cores have read the value from their directional register corresponding to this core.
+
+An adjacent core cannot read from the same `ALL` transmission more than once. It will instead block until the next distinct instruction writing to `ALL` or its specific directional register.
 
 Reading from `ALL` is an error.
 
@@ -261,6 +264,7 @@ This requires further thought as to implementation or requirements.
 ### 1011 IO
 
 Reading from `IO` requests the memeory controller to access the IO memory->address passed and return its value.
+
 Writing to `IO` requests the memeory controller to access the IO memory->address passed and set its value to the second value passed.
 
 The details of the memory controller are to be finalised.
@@ -290,22 +294,24 @@ This may mean a 2 byte instruction is required:
 This transfers a large number of values from one area of memory to another.
 
 Reading from `MB` requests the memeory controller to access and return a block of memory denoted by 2 values.
-    Value 1: The address of the first value to be returned.
-    Value 2: The number of values to be returned.
+- Value 1: The address of the first value to be returned.
+- Value 2: The number of values to be returned.
 
 Writing from `MB` places the requested values into a valid memory.
-    Value 1: The address of the first value to be returned.
-    There is no value 2 as that's denoted by the read side.
+- Value 1: The address of the first value to be returned.
+- There is no value 2 as that's denoted by the read side.
 
-    The only valid write locations are IO memory, PM memory or another section of general purpose memory.
+The only valid write locations are IO memory, PM memory or another section of general purpose memory.
 
 
 The details of the memory controller are to be finalised.
+
 The utility of `MB` is to be further finalised.
 
 ### 1111 MA
 
 Reading from `MA` requests the memeory controller to access the general memory->the address passed and return its value.
+
 Writing to `MA` requests the memeory controller to access the general memory->address passed and set its value to the second value passed.
 
 The details of the memory controller are to be finalised.
@@ -327,7 +333,11 @@ _ 00000 00000 2^10 BYTE
 ## Notes
 
 - Cycles are synchronized between all cores.
+
 - All computation happens simultaneously. Then, all `PC` registers are updated simultaneously.
+
 - If the system's state is exactly the same as the previous one, without waiting for external I/O, an error indicating a deadlock is raised.
+
 - If a core needs to look off the "edge" of the grid while linking to an adjacent core, it wraps around to the core on the other end of the same row/column.
+
 - `PC` will automatically wrap to the start of the program, if it would auto-increment past the end of the program. Writing an out of bounds value to `PC` is an error. Writing to `IMM` cannot change the size of the program at runtime.
