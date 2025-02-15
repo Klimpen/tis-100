@@ -5,14 +5,27 @@
 This is a specification for a TIS-100 inspired architecture. The architecture is a 2D grid of cores.
 Each core has connections to four adjacent cores with connections wrapping around like a torus.
 
-Each core has its own set of 16 registers:
+Each core has its own set of registers and memory, a bus shared with each adjacent core for inter-core communication and a bus to the memory controller:
 
 - 2 general purpose registers: `ACC`, and `BAK`.
-- 2 general purpose registers, with side effects controlling `PM` memory access: `MB`, `MA`.
-- 1 I/O mapped register for shared memory access: `PM`.
-- 7 I/O mapped registers for directional communication: `LEFT`, `RIGHT`, `UP`, `DOWN`, `ANY`, `LAST`, and `ALL`.
-- 1 I/O mapped register reserved for future use, `IO`.
-- 3 special-meaning registers: `NIL`, `IMM`, `PC`.
+- 4 I/O mapped bus for directional communication: `LEFT`, `RIGHT`, `UP`, `DOWN`
+- 3 I/O mapped bus aliases: `ANY`, `LAST`, and `ALL`.
+    `ANY` refers to at least one of the directional commonuication bus.
+    `LAST` refers to the last used direction bus(es).
+    `ALL` refers to all 4 directional buses.
+        This may not be a good idea and requires further thought.
+- 1 special-meaning registers: `PC`.
+    `PC` is a pointer to the current byte being executed.
+    `PC` is incremented every time an instruction successfully executes.
+- 1 special-meaning value: `NIL`.
+- 1 special meaning alias: `IMM`.
+    see below on Literals
+- 3 addresses, which instruct the memeory controller 
+    `MA` reads/writes to the address of the value passed in the general memory block
+    `MB` reads a sequence of values beginning at the first value passed and continuing for a second value number of bytes
+    `IO` reads/writes to the address of the value passed in the IO memory block
+- 1 address, which interact with the core's program memeory 
+    `PM` reads/writes to the address of the value passed in the core program memory
 
 All cores execute exactly one instruction in a cycle, simultaneously.
 
@@ -31,21 +44,35 @@ one for the destination `[DST]`, then one for the source `[SRC]`. All operators 
 
 It is an error to provide a register other than `UP`, `DOWN`, `LEFT`, `RIGHT`, `ANY`, `ALL`, or `LAST` as the source.
 
-`ANY` is a special case, accepting if any adjacent core is supplying a value.
+The result is written to a temporary register whose result is:
+    Usable in the next cycle.
+    Then cleared.
 
-`ALL` is a special case, accepting if all adjacent cores are supplying a value.
+    This temporary register is shared with CMP
 
-The result is written to the `[DST]` register: 1 if a value is immediately available, and 0 otherwise.
+     1 if a value is immediately available.
+     0 if a value is not immediately available.
 
 ### 010 BSL
 
 Reserved for future specification.
 
+Current plan is Bit Shift Left.
+Unsure if swizzle or append 0 is the most useful approach.
+
 ### 011 CMP
 
 `CMP [DST][SRC]` compares the values in the `[SRC]` and `[DST]` registers.
 
-The result is written to the `[DST]` register.
+The result is written to a temporary register whose result is:
+    Usable in the next cycle.
+    Then cleared.
+
+    This temporary register is shared with HAS
+
++1 if `[DST]` is larger than `[SRC]`
+ 0 if `[DST]` is equal to `[SRC]`
+-1 if `[DST]` is smaller than `[SRC]`
 
 ### 100 ADD
 
@@ -130,7 +157,7 @@ The accumulator register. `ACC` is the first general purpose register. Values ca
 
 ### 0010 BAK
 
-The backup register. `BAK` is the second general purpose register. Values can be written to and read from `ACC` without side effects.
+The backup register. `BAK` is the second general purpose register. Values can be written to and read from `BAK` without side effects.
 
 ### 0011 IMM
 
@@ -142,7 +169,7 @@ Writing to `IMM` modifies program code.
 
 ### 0100 LEFT
 
-The first inter-core register. `LEFT` represents communication with the core to the left. If this core is the leftmost core on the grid, it wraps to the rightmost core on the grid in the same row.
+The first inter-core bus. `LEFT` represents communication with the core to the left. If this core is the leftmost core on the grid, it wraps to the rightmost core on the grid in the same row.
 
 Communication is half duplex, and for a single value.
 
@@ -158,7 +185,7 @@ Reading from `LEFT` while the core to the left is reading from its `RIGHT` regis
 
 ### 0101 RIGHT
 
-The second inter-core register. `RIGHT` represents communication with the core to the right. If this core is the rightmost core on the grid, it wraps to the leftmost core on the grid in the same row.
+The second inter-core bus. `RIGHT` represents communication with the core to the right. If this core is the rightmost core on the grid, it wraps to the leftmost core on the grid in the same row.
 
 Communication is half duplex, and for a single value.
 
@@ -174,7 +201,7 @@ Reading from `RIGHT` while the core to the right is reading from its `LEFT` regi
 
 ### 0110 UP
 
-The third inter-core register. `UP` represents communication with the core above. If this core is the topmost core on the grid, it wraps to the bottommost core on the grid in the same column.
+The third inter-core bus. `UP` represents communication with the core above. If this core is the topmost core on the grid, it wraps to the bottommost core on the grid in the same column.
 
 Communication is half duplex, and for a single value.
 
@@ -190,7 +217,7 @@ Reading from `UP` while the core above is reading from its `DOWN` register is an
 
 ### 0111 DOWN
 
-The fourth inter-core register. `DOWN` represents communication with the core below. If this core is the bottommost core on the grid, it wraps to the topmost core on the grid in the same column.
+The fourth inter-core bus. `DOWN` represents communication with the core below. If this core is the bottommost core on the grid, it wraps to the topmost core on the grid in the same column.
 
 Communication is half duplex, and for a single value.
 
@@ -206,7 +233,7 @@ Reading from `DOWN` while the core below is reading from its `UP` register is an
 
 ### 1000 ANY
 
-The fifth inter-core register. `ANY` represents communication with any adjacent core.
+The first inter-core alias. `ANY` represents communication with any adjacent core.
 
 If multiple adjacent cores attempt to read from their directional register corresponding to this core simultaneously, all cores receive the same value immediately.
 
@@ -216,7 +243,7 @@ Reading from `ANY` causes the current core to block, repeating reception on ever
 
 ### 1001 LAST
 
-An alias for the register corresponding to the directional communication was received from or sent to the last time this core accessed `ANY`.
+The second inter-core alias. `LAST`represents the register corresponding to the directional communication was received from or sent to the last time this core accessed an inter-core register.
 
 ### 1010 ALL
 
@@ -229,29 +256,59 @@ distinct instruction writing to `ALL` or its specific directional register.
 
 Reading from `ALL` is an error.
 
+This requires further thought as to implementation or requirements.
+
 ### 1011 IO
 
-Reserved for future specification.
+Reading from `IO` requests the memeory controller to access the IO memory->address passed and return its value.
+Writing to `IO` requests the memeory controller to access the IO memory->address passed and set its value to the second value passed.
+
+The details of the memory controller are to be finalised.
 
 ### 1100 PC
 
-Program counter register. Specifies the address of the next instruction to execute. Writing to this register has the same effect as an unconditional jump.
+Program counter register. Specifies the address in `PM` of the next instruction to execute. Writing to this register has the same effect as an unconditional jump.
+
+A `PC` overflow is not an error, the program continues executing from `PC` = 0.
 
 ### 1101 PM
 
-Program memory register. Read or write to this value to read or write to the shared memory address specified by this core's `MB` and `MA` registers.
+The program memory of the core.
 
-It is an error for multiple cores to write to the same shared memory address in the same cycle.
+`PC` specifies the address which is being executed.
 
-If other cores read from the same shared memory address as this core writes to, the value read is the value available from the previous cycle.
+Writing to this has the effect of changing the program being executed.
+
+A program should return to `PC` = 0 at the end of the code block being executed.
+
+This may mean a 2 byte instruction is required:
+    MOV `PC` `IMM`
+    0x00000 00000
 
 ### 1110 MB
 
-Memory block register. Specifies the shared 16-cell memory block to read from or write to with `PM`.
+This transfers a large number of values from one area of memory to another.
+
+Reading from `MB` requests the memeory controller to access and return a block of memory denoted by 2 values.
+    Value 1: The address of the first value to be returned.
+    Value 2: The number of values to be returned.
+
+Writing from `MB` places the requested values into a valid memory.
+    Value 1: The address of the first value to be returned.
+    There is no value 2 as that's denoted by the read side.
+
+    The only valid write locations are IO memory, PM memory or another section of general purpose memory.
+
+
+The details of the memory controller are to be finalised.
+The utility of `MB` is to be further finalised.
 
 ### 1111 MA
 
-Memory address register. Specifies the shared memory address in the 16-cell shared memory block specified by `MB` to read from or write to with `PM`.
+Reading from `MA` requests the memeory controller to access the general memory->the address passed and return its value.
+Writing to `MA` requests the memeory controller to access the general memory->address passed and set its value to the second value passed.
+
+The details of the memory controller are to be finalised.
 
 ## Value representation
 
@@ -270,7 +327,7 @@ _ 00000 00000 2^10 BYTE
 ## Notes
 
 - Cycles are synchronized between all cores.
-- All computation happens simultaneously. Then, all `pc` registers are updated simultaneously.
+- All computation happens simultaneously. Then, all `PC` registers are updated simultaneously.
 - If the system's state is exactly the same as the previous one, without waiting for external I/O, an error indicating a deadlock is raised.
 - If a core needs to look off the "edge" of the grid while linking to an adjacent core, it wraps around to the core on the other end of the same row/column.
 - `PC` will automatically wrap to the start of the program, if it would auto-increment past the end of the program. Writing an out of bounds value to `PC` is an error. Writing to `IMM` cannot change the size of the program at runtime.
