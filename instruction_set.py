@@ -1,7 +1,4 @@
-from main import *
-
-# need to think about how to do multiple immediates from a function call
-# TODO rewrite these to use eachother where possible - or at least binary operators rather than inbuilt pythong stuff
+from constants import *
 
 class Instruction_Set:
     # 000
@@ -13,76 +10,56 @@ class Instruction_Set:
         #   immediate fetch
 
         # pc should not change if it's in access lock
-
-        # TODO
-
-        dst = src
-
+        print(f"MOV: {dst}, {src}")
 
     # 001
-    def has(core, src):
-        # checks to see if the src has something to fetch
-        # returns 0 if it does not
-        # returns 1 if it does
-
-        # TODO - figure out how this works in actual implementation
-        if src:
-            core.result = 1
-        else:
-            core.result = 0
-
+    def has(core, dst, src):
+        # read src.value
+        print(f"HAS: {dst}, {src}")
 
     # 010 - bit shift left
-    def bsl(core, dst):
-        # TODO swizzle or append 0, unsure which
-        # current append 0
-        dst << 1
+    def bsl(core, dst, src):
+        print(f"BSL: {dst}, {src}")
 
     # 011 - compare
     def cmp(core, dst, src):
-        # returns   +1 if dst > src
-        # returns   -1 if dst < src
-        # returns +/-0 if dst = src
-        if dst - src > 0:
-            core.result = 1
-        if dst - src < 0:
-            core.result = -1
-        if dst - src == 0:
-            core.result = 0
+        # read dst.value
+        # read src.value
+
+        # ans =   +1 if dst.value > src.value
+        # ans =   -1 if dst.value < src.value
+        # ans = +/-0 if dst.value = src.value
+
+        # write ans to core.result
+
+        print(f"CMP: {dst}, {src}")
 
     # 100
     def add(core, dst, src):
-        # sets dst = dst + src
-        dst += src
+        # read dst.value
+        # read src.value
+        # ans = dst.value + src.value
+        # write ans to dst
+        print(f"ADD: {dst}, {src}")
 
     # 101
     def xor(core, dst, src):
-        # sets dst = dst xor src
-        dst = dst ^ src
+        # read dst.value
+        # read src.value
+        # ans = dst.value ^ src.value
+        # write ans to dst
+        print(f"XOR: {dst}, {src}")
 
     # 110
     def jez(core, dst, src):
-        # jumps to dst
-        # jumps if src == +0
-        if src == 0:
-            core.program_counter = dst
-            core.success = False # dont increment the PC as we've set it manually
+        # read src->src.value
+        # if src.value == +/- 0
+        # mov pc, dst
+        print(f"JEZ: {dst}, {src}")
 
     # 111
     def jgz(core, dst, src):
-        # jumps to dst
-        # jumps if src > +0
-        if src > 0:
-            core.program_counter = dst
-            core.success = False # dont increment the PC as we've set it manually
-
-    def decode(core, instruction):
-        # TODO figure this
-        # break instruction into [3bit][4bit][4bit] = instruction + dst_byte + src_byte
-        # implement this as match [instruction] case: instruction([dst_byte], [src_byte])
-
-
-
-        # TODO figure immediate
-        # TODO figure memget
-        print(f"decoding: {core.program_counter}, {instruction}")
+        # read src->src.value
+        # if src.value > +0
+        # mov pc, dst
+        print(f"JGZ: {dst}, {src}")
