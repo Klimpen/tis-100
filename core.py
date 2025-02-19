@@ -29,6 +29,14 @@ class Core():
         self.up = Bus()
         self.down = None
 
+    def get_value(source):
+        match(source):
+            case _: raise Exception()
+
+    def write_value(dst, value):
+        match(dst):
+            case _: raise Exception()
+
 
     def run(self):        
         instruction = self.program_memory[self.program_counter].value
@@ -75,3 +83,4 @@ class Decoder():
             case 0b10100000000: Instruction_Set.xor(self.core, self.dst, self.src)
             case 0b11000000000: Instruction_Set.jez(self.core, self.dst, self.src)
             case 0b11100000000: Instruction_Set.jgz(self.core, self.dst, self.src)
+            case _: raise Exception()

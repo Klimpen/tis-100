@@ -10,14 +10,18 @@ class Instruction_Set:
         #   immediate fetch
 
         # pc should not change if it's in access lock
-        print(f"MOV: {dst}, {src}")
+        src_value = core.get_value(src)
+        
+        core.write_value(dst, src_value)
 
     # 001
     def has(core, dst, src):
         # read src.value
+        # if read is successful, core.result = 1
         print(f"HAS: {dst}, {src}")
 
     # 010 - bit shift left
+    # TODO figure how I want to do this
     def bsl(core, dst, src):
         print(f"BSL: {dst}, {src}")
 
@@ -26,13 +30,22 @@ class Instruction_Set:
         # read dst.value
         # read src.value
 
-        # ans =   +1 if dst.value > src.value
-        # ans =   -1 if dst.value < src.value
-        # ans = +/-0 if dst.value = src.value
+        # core.result =   +1 if dst.value > src.value
+        # core.result =   -1 if dst.value < src.value
+        # core.result = +/-0 if dst.value = src.value
 
-        # write ans to core.result
 
         print(f"CMP: {dst}, {src}")
+
+        dst_value = core.get_value(dst)
+        src_value = core.get_value(src)
+
+        if(dst_value > src_value):
+            core.result = 1
+        if(dst_value == src_value):
+            core.result = 0
+        if(dst_value < src_value):
+            core.result = -1
 
     # 100
     def add(core, dst, src):
@@ -42,24 +55,54 @@ class Instruction_Set:
         # write ans to dst
         print(f"ADD: {dst}, {src}")
 
+        dst_value = core.get_value(dst)
+        src_value = core.get_value(src)
+
+        ans = dst_value + src_value
+        
+        core.write_value(dst, ans)
+
     # 101
     def xor(core, dst, src):
         # read dst.value
         # read src.value
-        # ans = dst.value ^ src.value
+        # ans = dst.value xor src.value
         # write ans to dst
         print(f"XOR: {dst}, {src}")
+
+        dst_value = core.get_value(dst)
+        src_value = core.get_value(src)
+
+        ans = dst_value ^ src_value
+
+        core.write_value(dst, ans)
+
+
 
     # 110
     def jez(core, dst, src):
         # read src->src.value
         # if src.value == +/- 0
         # mov pc, dst
+        # dont update pc as we've written to it
         print(f"JEZ: {dst}, {src}")
+
+        src_value = core.get_value(src)
+
+        if(src_value == 0):
+            Instruction_Set.mov(core, PC, dst)
+            core.success = False
 
     # 111
     def jgz(core, dst, src):
         # read src->src.value
         # if src.value > +0
         # mov pc, dst
+        # dont update pc as we've written to it
         print(f"JGZ: {dst}, {src}")
+
+        src_value = core.get_value(src)
+
+        if(src_value > 0):
+            Instruction_Set.mov(core, PC, dst)
+            core.success = False
