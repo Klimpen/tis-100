@@ -7,11 +7,19 @@ class Core():
 
         self.decoder = Decoder(self)
         
-        self.program_memory = [Byte()] * 2**11 # set to 1000 for the moment, should put this as less?
-        self.program_counter = Byte()
+        self.program_memory = [Byte(0b00000000000), # test program
+                                Byte(0b00100000000),
+                                Byte(0b01000000000),
+                                Byte(0b01100000000),
+                                Byte(0b10000000000),
+                                Byte(0b10100000000),
+                                Byte(0b11000000000),
+                                Byte(0b11100000000)]
+        # self.program_memory = [Byte()] * 2**11 # set to 1000 for the moment, should put this as less?
+        self.program_counter = 0
 
-        self.acc = Byte()
-        self.bak = Byte()
+        self.acc = Byte(0b0)
+        self.bak = Byte(0b0)
 
         self.result = None      # TODO: Figure this - placeholder
         self.success = True     # DEFAULT = TRUE, reset to True each tick. False = do not increment program_counter; True = increment program_counter
@@ -23,14 +31,14 @@ class Core():
 
 
     def run(self):        
-        instruction = self.program_memory[self.program_counter]
+        instruction = self.program_memory[self.program_counter].value
         self.decoder.decode(instruction)
 
     #TODO: update this to use 'add(pc, imm), 0x1'
     def update_program_counter(self):
         if self.success:
-            self.program_counter.value += 1
-            self.program_counter.value %= 2**11
+            self.program_counter += 1
+            self.program_counter %= 8
         else:
             self.success = True
 
@@ -43,12 +51,13 @@ class Decoder():
     def __init__(self, core):
         self.core= core
 
-        self.instruction = None
-        self.dst = None
-        self.src = None
+        self.instruction = 0b0
+        self.dst = 0b0
+        self.src = 0b0
 
 
     def decode(self, instruction):
+
         self.instruction = instruction & 0b11100000000
         self.dst         = instruction & 0b00011110000
         self.src         = instruction & 0b00000001111
@@ -56,12 +65,13 @@ class Decoder():
         self.run()
 
     def run(self):
-        match(self.instruction):
-            case Instruction.MOV: Instruction_Set.mov(self.core, self.dst, self.src)
-            case Instruction.HAS: Instruction_Set.has(self.core, self.dst, self.src)
-            case Instruction.BSL: Instruction_Set.bsl(self.core, self.dst, self.src)
-            case Instruction.CMP: Instruction_Set.cmp(self.core, self.dst, self.src)
-            case Instruction.ADD: Instruction_Set.add(self.core, self.dst, self.src)
-            case Instruction.XOR: Instruction_Set.xor(self.core, self.dst, self.src)
-            case Instruction.JEZ: Instruction_Set.jez(self.core, self.dst, self.src)
-            case Instruction.JGZ: Instruction_Set.jgz(self.core, self.dst, self.src)
+        instruction = self.instruction
+        match(instruction):
+            case 0b00000000000: Instruction_Set.mov(self.core, self.dst, self.src)
+            case 0b00100000000: Instruction_Set.has(self.core, self.dst, self.src)
+            case 0b01000000000: Instruction_Set.bsl(self.core, self.dst, self.src)
+            case 0b01100000000: Instruction_Set.cmp(self.core, self.dst, self.src)
+            case 0b10000000000: Instruction_Set.add(self.core, self.dst, self.src)
+            case 0b10100000000: Instruction_Set.xor(self.core, self.dst, self.src)
+            case 0b11000000000: Instruction_Set.jez(self.core, self.dst, self.src)
+            case 0b11100000000: Instruction_Set.jgz(self.core, self.dst, self.src)
