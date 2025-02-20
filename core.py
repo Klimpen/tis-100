@@ -29,13 +29,73 @@ class Core():
         self.up = Bus()
         self.down = None
 
-    def get_value(source):
+    def get_value(self, source):
+
         match(source):
+            case 0b0000: pass # NIL
+            case 0b0001: return self.acc.value
+            case 0b0010: return self.bak.value
+            case 0b0011: return self.get_immediate().value
+
+            case 0b0100: return self.left.get()
+            case 0b0101: return self.right.get()
+            case 0b0110: return self.up.get()
+            case 0b0111: return self.down.get()
+
+            case 0b1000: return self.get_any()
+            case 0b1001: return self.get_last()
+            case 0b1010: raise Exception() # cannot read from ALL
+            case 0b1011: pass # read from IO memory 
+
+            case 0b1100: return self.program_counter
+            case 0b1101: pass # read from program memory
+            case 0b1110: pass # read block from general memory
+            case 0b1111: pass # read value from general memory
             case _: raise Exception()
 
-    def write_value(dst, value):
+    def get_immediate():
+        pass
+
+    def get_any():
+        pass
+
+    def get_last():
+        pass
+
+    def write_value(self, dst, value):
         match(dst):
+            case 0b0000: pass # NIL
+            case 0b0001: self.acc = value
+            case 0b0010: self.bak = value
+            case 0b0011: self.write_immediate(value)
+
+            case 0b0100: self.left.write(value)
+            case 0b0101: self.right.write(value)
+            case 0b0110: self.up.write(value)
+            case 0b0111: self.down.write(value)
+
+            case 0b1000: self.write_any(value)
+            case 0b1001: self.write_last(value)
+            case 0b1010: self.write_all(value)
+            case 0b1011: pass # write from IO memory 
+
+            case 0b1100: self.program_counter = value
+            case 0b1101: pass # write from program memory
+            case 0b1110: pass # write block from general memory
+            case 0b1111: pass # write value from general memory
             case _: raise Exception()
+
+    def write_immediate(self, value):
+        pass
+
+    def write_any(self, value):
+        pass
+
+    def write_last(self, value):
+        pass
+
+    def write_all(self, value):
+        pass
 
 
     def run(self):        
@@ -66,21 +126,21 @@ class Decoder():
 
     def decode(self, instruction):
 
-        self.instruction = instruction & 0b11100000000
-        self.dst         = instruction & 0b00011110000
-        self.src         = instruction & 0b00000001111
+        self.instruction = (instruction & 0b11100000000) // 256
+        self.dst         = (instruction & 0b00011110000) // 16
+        self.src         = (instruction & 0b00000001111)
 
         self.run()
 
     def run(self):
         instruction = self.instruction
         match(instruction):
-            case 0b00000000000: Instruction_Set.mov(self.core, self.dst, self.src)
-            case 0b00100000000: Instruction_Set.has(self.core, self.dst, self.src)
-            case 0b01000000000: Instruction_Set.bsl(self.core, self.dst, self.src)
-            case 0b01100000000: Instruction_Set.cmp(self.core, self.dst, self.src)
-            case 0b10000000000: Instruction_Set.add(self.core, self.dst, self.src)
-            case 0b10100000000: Instruction_Set.xor(self.core, self.dst, self.src)
-            case 0b11000000000: Instruction_Set.jez(self.core, self.dst, self.src)
-            case 0b11100000000: Instruction_Set.jgz(self.core, self.dst, self.src)
-            case _: raise Exception()
+            case 0b000: Instruction_Set.mov(self.core, self.dst, self.src)
+            case 0b001: Instruction_Set.has(self.core, self.dst, self.src)
+            case 0b010: Instruction_Set.bsl(self.core, self.dst, self.src)
+            case 0b011: Instruction_Set.cmp(self.core, self.dst, self.src)
+            case 0b100: Instruction_Set.add(self.core, self.dst, self.src)
+            case 0b101: Instruction_Set.xor(self.core, self.dst, self.src)
+            case 0b110: Instruction_Set.jez(self.core, self.dst, self.src)
+            case 0b111: Instruction_Set.jgz(self.core, self.dst, self.src)
+            case _: print(f"_: {instruction}")

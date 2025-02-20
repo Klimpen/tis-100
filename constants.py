@@ -47,3 +47,9 @@ class Bus():
     value = None
     send = False
     receive = False
+
+    def get():
+        pass
+
+    def write(value):
+        pass
