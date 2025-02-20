@@ -22,13 +22,23 @@ class Instruction_Set:
         # read src.value
         # if read is successful, core.result = 1
         # print(f"HAS: {dst}, {src}")
-        pass 
+        src_value = core.has_value(src)
+
+        if src_value:
+            core.result = 1 
 
     # 010 - bit shift left
     # TODO figure how I want to do this
     def bsl(core, dst, src):
+        # read src.value
+        # src_value << 1 : bitshift left, append 0
+        # write ans to dst
         # print(f"BSL: {dst}, {src}")
-        pass
+        src_value = core.get_value(src)
+
+        src_value << 1
+
+        core.write_value(dst, src_value)
 
     # 011 - compare
     def cmp(core, dst, src):

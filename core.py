@@ -27,6 +27,27 @@ class Core():
         self.up = Bus()
         self.down = None
 
+    def has_value(self, address):
+        match(address):
+            case 0b0100: return self.left.send
+            case 0b0101: return self.right.send
+            case 0b0110: return self.up.send
+            case 0b0111: return self.down.send
+
+            case 0b1000: return self.has_any()
+            case 0b1001: return self.has_last()
+            case 0b1010: return self.has_all()
+            case _: Exception(address)
+
+    def has_any():
+        pass
+
+    def has_last():
+        pass
+
+    def has_all():
+        pass
+
     def get_value(self, address):
 
         match(address):
