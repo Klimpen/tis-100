@@ -10,6 +10,9 @@ class Instruction_Set:
         #   immediate fetch
 
         # pc should not change if it's in access lock
+        
+        # print(f"MOV: {dst}, {src}")
+
         src_value = core.get_value(src)
         
         core.write_value(dst, src_value)
@@ -18,12 +21,14 @@ class Instruction_Set:
     def has(core, dst, src):
         # read src.value
         # if read is successful, core.result = 1
-        print(f"HAS: {dst}, {src}")
+        # print(f"HAS: {dst}, {src}")
+        pass 
 
     # 010 - bit shift left
     # TODO figure how I want to do this
     def bsl(core, dst, src):
-        print(f"BSL: {dst}, {src}")
+        # print(f"BSL: {dst}, {src}")
+        pass
 
     # 011 - compare
     def cmp(core, dst, src):
@@ -35,7 +40,7 @@ class Instruction_Set:
         # core.result = +/-0 if dst.value = src.value
 
 
-        print(f"CMP: {dst}, {src}")
+        # print(f"CMP: {dst}, {src}")
 
         dst_value = core.get_value(dst)
         src_value = core.get_value(src)
@@ -53,7 +58,7 @@ class Instruction_Set:
         # read src.value
         # ans = dst.value + src.value
         # write ans to dst
-        print(f"ADD: {dst}, {src}")
+        # print(f"ADD: {dst}, {src}")
 
         dst_value = core.get_value(dst)
         src_value = core.get_value(src)
@@ -68,7 +73,7 @@ class Instruction_Set:
         # read src.value
         # ans = dst.value xor src.value
         # write ans to dst
-        print(f"XOR: {dst}, {src}")
+        # print(f"XOR: {dst}, {src}")
 
         dst_value = core.get_value(dst)
         src_value = core.get_value(src)
@@ -85,7 +90,7 @@ class Instruction_Set:
         # if src.value == +/- 0
         # mov pc, dst
         # dont update pc as we've written to it
-        print(f"JEZ: {dst}, {src}")
+        # print(f"JEZ: {dst}, {src}")
 
         src_value = core.get_value(src)
 
@@ -99,7 +104,7 @@ class Instruction_Set:
         # if src.value > +0
         # mov pc, dst
         # dont update pc as we've written to it
-        print(f"JGZ: {dst}, {src}")
+        # print(f"JGZ: {dst}, {src}")
 
         src_value = core.get_value(src)
 

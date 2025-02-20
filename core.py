@@ -7,14 +7,14 @@ class Core():
 
         self.decoder = Decoder(self)
         
-        self.program_memory = [Byte(0b00000000000), # test program
-                                Byte(0b00100000000),
-                                Byte(0b01000000000),
-                                Byte(0b01100000000),
-                                Byte(0b10000000000),
-                                Byte(0b10100000000),
-                                Byte(0b11000000000),
-                                Byte(0b11100000000)]
+        self.program_memory = [Byte(0b00000010001), # test program
+                                Byte(0b00100010001),
+                                Byte(0b01000010001),
+                                Byte(0b01100010001),
+                                Byte(0b10000010001),
+                                Byte(0b10100010001),
+                                Byte(0b11000010001),
+                                Byte(0b11100010001)]
         # self.program_memory = [Byte()] * 2**11 # set to 1000 for the moment, should put this as less?
         self.program_counter = 0
 
@@ -77,8 +77,8 @@ class Core():
     def write_value(self, dst, value):
         match(dst):
             case 0b0000: pass # NIL
-            case 0b0001: self.acc = value
-            case 0b0010: self.bak = value
+            case 0b0001: self.acc.value = value
+            case 0b0010: self.bak.value = value
             case 0b0011: self.write_immediate(value)
 
             case 0b0100: self.left.write(value)
@@ -98,7 +98,7 @@ class Core():
             case _: raise Exception()
 
     def write_immediate(self, value):
-        self.program_memory[self.program_counter+1] = value
+        self.program_memory[self.program_counter+1].value = value
 
     def write_any(self, value):
         pass
