@@ -35,7 +35,7 @@ class Core():
             case 0b0000: pass # NIL
             case 0b0001: return self.acc.value
             case 0b0010: return self.bak.value
-            case 0b0011: return self.get_immediate().value
+            case 0b0011: return self.get_immediate()
 
             case 0b0100: return self.left.get()
             case 0b0101: return self.right.get()
@@ -53,13 +53,25 @@ class Core():
             case 0b1111: pass # read value from general memory
             case _: raise Exception()
 
-    def get_immediate():
-        pass
+    def get_immediate(self):
+            self.program_counter += 1
+            self.program_counter %= 8
 
-    def get_any():
-        pass
+            return self.program_memory[self.program_counter].value
 
-    def get_last():
+    def get_any(self):
+        ans = None
+
+        ans = self.left.get()
+        ans = self.right.get()
+        ans = self.up.get()
+        ans = self.down.get()
+
+        if ans:
+            self.success = True
+            return ans
+
+    def get_last(self):
         pass
 
     def write_value(self, dst, value):
@@ -86,7 +98,7 @@ class Core():
             case _: raise Exception()
 
     def write_immediate(self, value):
-        pass
+        self.program_memory[self.program_counter+1] = value
 
     def write_any(self, value):
         pass
