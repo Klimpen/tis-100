@@ -30,25 +30,25 @@ class Core():
     def get_value(self, address):
 
         match(address):
-            case Address.NIL: pass # NIL
-            case Address.ACC: return self.acc.value
-            case Address.BAK: return self.bak.value
-            case Address.IMM: return self.get_immediate()
+            case 0b0000: pass # NIL
+            case 0b0001: return self.acc.value
+            case 0b0010: return self.bak.value
+            case 0b0011: return self.get_immediate()
 
-            case Address.LEFT: return self.get_direction(self.left)
-            case Address.RIGHT: return self.get_direction(self.right)
-            case Address.UP: return self.get_direction(self.up)
-            case Address.DOWN: return self.get_direction(self.down)
+            case 0b0100: return self.get_direction(self.left)
+            case 0b0101: return self.get_direction(self.right)
+            case 0b0110: return self.get_direction(self.up)
+            case 0b0111: return self.get_direction(self.down)
 
-            case Address.ANY: return self.get_any()
-            case Address.LAST: return self.get_last()
-            case Address.ALL: raise Exception() # cannot read from ALL
-            case Address.IO: pass # read from IO memory 
+            case 0b1000: return self.get_any()
+            case 0b1001: return self.get_last()
+            case 0b1010: raise Exception() # cannot read from ALL
+            case 0b1011: pass # read from IO memory 
 
-            case Address.PC: return self.program_counter
-            case Address.PM: pass # read from program memory
-            case Address.MB: pass # read block from general memory
-            case Address.MA: pass # read value from general memory
+            case 0b1100: return self.program_counter
+            case 0b1101: pass # read from program memory
+            case 0b1110: pass # read block from general memory
+            case 0b1111: pass # read value from general memory
             case _: raise Exception(address)
 
     def get_immediate(self):
@@ -73,25 +73,25 @@ class Core():
 
     def write_value(self, address, value):
         match(address):
-            case Address.NIL  : pass
-            case Address.ACC  : self.acc.value = value
-            case Address.BAK  : self.bak.value = value
-            case Address.IMM  : self.write_immediate(value)
+            case 0b0000 : pass
+            case 0b0001 : self.acc.value = value
+            case 0b0010 : self.bak.value = value
+            case 0b0011 : self.write_immediate(value)
 
-            case Address.LEFT : self.write_direction(self.left, value)
-            case Address.RIGHT: self.write_direction(self.right, value)
-            case Address.UP   : self.write_direction(self.up, value)
-            case Address.DOWN : self.write_direction(self.down, value)
+            case 0b0100 : self.write_direction(self.left, value)
+            case 0b0101 : self.write_direction(self.right, value)
+            case 0b0110 : self.write_direction(self.up, value)
+            case 0b0111 : self.write_direction(self.down, value)
 
-            case Address.ANY  : self.write_any(value)
-            case Address.LAST : self.write_last(value)
-            case Address.ALL  : self.write_all(value)
-            case Address.IO   : pass # write from IO memory 
+            case 0b1000 : self.write_any(value)
+            case 0b1001 : self.write_last(value)
+            case 0b1010 : self.write_all(value)
+            case 0b1011 : pass # write from IO memory 
 
-            case Address.PC   : self.program_counter = value
-            case Address.PM   : pass # write from program memory
-            case Address.MB   : pass # write block from general memory
-            case Address.MA   : pass # write value from general memory
+            case 0b1100 : self.program_counter = value
+            case 0b1101 : pass # write from program memory
+            case 0b1110 : pass # write block from general memory
+            case 0b1111 : pass # write value from general memory
             case _: raise Exception(address)
 
     def write_immediate(self, value):
@@ -133,12 +133,12 @@ class Core():
         src         = (byte & 0b00000001111)
 
         match(instruction):
-            case Instruction.MOV: Instruction_Set.mov(self, dst, src)
-            case Instruction.HAS: Instruction_Set.has(self, dst, src)
-            case Instruction.BSL: Instruction_Set.bsl(self, dst, src)
-            case Instruction.CMP: Instruction_Set.cmp(self, dst, src)
-            case Instruction.ADD: Instruction_Set.add(self, dst, src)
-            case Instruction.XOR: Instruction_Set.xor(self, dst, src)
-            case Instruction.JEZ: Instruction_Set.jez(self, dst, src)
-            case Instruction.JGZ: Instruction_Set.jgz(self, dst, src)
+            case 0b000: Instruction_Set.mov(self, dst, src)
+            case 0b001: Instruction_Set.has(self, dst, src)
+            case 0b010: Instruction_Set.bsl(self, dst, src)
+            case 0b011: Instruction_Set.cmp(self, dst, src)
+            case 0b100: Instruction_Set.add(self, dst, src)
+            case 0b101: Instruction_Set.xor(self, dst, src)
+            case 0b110: Instruction_Set.jez(self, dst, src)
+            case 0b111: Instruction_Set.jgz(self, dst, src)
             case _: raise Exception(instruction)

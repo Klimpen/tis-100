@@ -1,38 +1,36 @@
 from enum import Enum
 
 # INSTRUCTIONS
-class Instruction(Enum):
-    MOV = 0b000
-    HAS = 0b001
-    BSL = 0b010 # UNSURE - BIT SHIFT LEFT?
-    CMP = 0b011
+MOV = 0b000
+HAS = 0b001
+BSL = 0b010 # UNSURE - BIT SHIFT LEFT?
+CMP = 0b011
 
-    ADD = 0b100
-    XOR = 0b101
-    JEZ = 0b110
-    JGZ = 0b111
+ADD = 0b100
+XOR = 0b101
+JEZ = 0b110
+JGZ = 0b111
 
 # ADDRESSABLE SPACE
-class Address(Enum):
-    NIL   = 0b0000
-    ACC   = 0b0001
-    BAK   = 0b0010
-    IMM   = 0b0011 #immediate = next byte
+NIL   = 0b0000
+ACC   = 0b0001
+BAK   = 0b0010
+IMM   = 0b0011 #immediate = next byte
 
-    LEFT  = 0b0100
-    RIGHT = 0b0101
-    UP    = 0b0110
-    DOWN  = 0b0111
+LEFT  = 0b0100
+RIGHT = 0b0101
+UP    = 0b0110
+DOWN  = 0b0111
 
-    ANY   = 0b1000
-    LAST  = 0b1001
-    ALL   = 0b1010
-    IO    = 0b1011 # UNSURE - ADDRESSABLE MEMORY IS SMALLER THAN SCREEN [160x60 char]
+ANY   = 0b1000
+LAST  = 0b1001
+ALL   = 0b1010
+IO    = 0b1011 # UNSURE - ADDRESSABLE MEMORY IS SMALLER THAN SCREEN [160x60 char]
 
-    PC    = 0b1100 #program counter
-    PM    = 0b1101 #program memory
-    MB    = 0b1110 #memory block
-    MA    = 0b1111 #memory address
+PC    = 0b1100 #program counter
+PM    = 0b1101 #program memory
+MB    = 0b1110 #memory block
+MA    = 0b1111 #memory address
 
 # VALUES
 
