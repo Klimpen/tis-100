@@ -1,0 +1,3 @@
+inter-core bus
+memory controller
+    'io -> screen' rendering
