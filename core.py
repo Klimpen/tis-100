@@ -29,9 +29,9 @@ class Core():
         self.up = Bus()
         self.down = None
 
-    def get_value(self, source):
+    def get_value(self, address):
 
-        match(source):
+        match(address):
             case 0b0000: pass # NIL
             case 0b0001: return self.acc.value
             case 0b0010: return self.bak.value
@@ -51,7 +51,7 @@ class Core():
             case 0b1101: pass # read from program memory
             case 0b1110: pass # read block from general memory
             case 0b1111: pass # read value from general memory
-            case _: raise Exception()
+            case _: raise Exception(address)
 
     def get_immediate(self):
             self.program_counter += 1
@@ -74,8 +74,8 @@ class Core():
     def get_last(self):
         pass
 
-    def write_value(self, dst, value):
-        match(dst):
+    def write_value(self, address, value):
+        match(address):
             case 0b0000: pass # NIL
             case 0b0001: self.acc.value = value
             case 0b0010: self.bak.value = value
@@ -95,7 +95,7 @@ class Core():
             case 0b1101: pass # write from program memory
             case 0b1110: pass # write block from general memory
             case 0b1111: pass # write value from general memory
-            case _: raise Exception()
+            case _: raise Exception(address)
 
     def write_immediate(self, value):
         self.program_memory[self.program_counter+1].value = value
@@ -155,4 +155,4 @@ class Decoder():
             case 0b101: Instruction_Set.xor(self.core, self.dst, self.src)
             case 0b110: Instruction_Set.jez(self.core, self.dst, self.src)
             case 0b111: Instruction_Set.jgz(self.core, self.dst, self.src)
-            case _: print(f"_: {instruction}")
+            case _: raise Exception(instruction)
