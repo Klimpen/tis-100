@@ -27,6 +27,7 @@ def main():
 
         cores.append(sub_list)
 
+    # make it so all cores render
     for line in cores[0][0].draw():
         print(line)
 

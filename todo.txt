@@ -7,4 +7,8 @@ write_last
 write_any
 write_all
 
-'io -> screen' rendering
+make it so all cores render
+make it so all bus render
+
+make it so we have a cursor
+make it so we can write to cores
