@@ -5,12 +5,14 @@ from constants import *
 def main():
 
     cores = []
+    memory = [Byte()] * 2**11
+
 
     #init cores - up/down wrapping and right/left wrapping - torus of cores!
     for i in range(0, CORES_WIDTH):
         sub_list = []
         for j in range(0, CORES_HEIGHT):
-            sub_list.append(Core())
+            sub_list.append(Core(memory))
 
             if not j == 0:
                 sub_list[-1].left = sub_list[-2].right

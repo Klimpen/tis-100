@@ -3,9 +3,11 @@ from instruction_set import *
 
 class Core():
 
-    def __init__(self):
+    def __init__(self, memory_general, memory_io):
         
-        self.program_memory = [Byte(0b00000010001), # test program
+        self.memory_general = memory_general
+        self.memory_io = memory_io
+        self.memory_program = [Byte(0b00000010001), # test program
                                 Byte(0b00100010001),
                                 Byte(0b01000010001),
                                 Byte(0b01100010001),
@@ -39,19 +41,27 @@ class Core():
             case 0b1010: return self.has_all()
             case _: Exception(address)
 
-    def has_any():
+    def has_any(self):
+        return (
+            self.left.send or 
+            self.right.send or 
+            self. up.send or 
+            self.down.send)
+
+    def has_last(self):
         pass
 
-    def has_last():
-        pass
-
-    def has_all():
-        pass
+    def has_all(self):
+        return (
+            self.left.send and
+            self.right.send and 
+            self. up.send and
+            self.down.send)
 
     def get_value(self, address):
 
         match(address):
-            case 0b0000: pass # NIL
+            case 0b0000: return 0b0 
             case 0b0001: return self.acc.value
             case 0b0010: return self.bak.value
             case 0b0011: return self.get_immediate()
@@ -63,13 +73,13 @@ class Core():
 
             case 0b1000: return self.get_any()
             case 0b1001: return self.get_last()
-            case 0b1010: raise Exception() # cannot read from ALL
-            case 0b1011: pass # read from IO memory 
+            case 0b1010: raise Exception("Cannot read from ALL") # cannot read from ALL
+            case 0b1011: return self.get_memory(self.memory_io)
 
             case 0b1100: return self.program_counter
-            case 0b1101: pass # read from program memory
+            case 0b1101: return self.get_memory(self.memory_program)
             case 0b1110: pass # read block from general memory
-            case 0b1111: pass # read value from general memory
+            case 0b1111: return self.get_memory(self.memory_general)
             case _: raise Exception(address)
 
     def get_immediate(self):
@@ -87,11 +97,26 @@ class Core():
         return value
 
     def get_any(self):
-        pass
+        # case: there is something to get
+        output = None
+
+        if self.has_any():
+            if self.left.send: output = self.get_direction(self.left)
+            if self.right.send: output = self.get_direction(self.right)
+            if self.up.send: output = self.get_direction(self.up)
+            if self.down.send: output = self.get_direction(self.down)
+            return output
+        
+        # case: there is not something to get
+        self.success = False
+        return output
 
     def get_last(self):
         pass
 
+    def get_memory(self, memory):
+        return memory[self.get_immediate()].value
+    
     def write_value(self, address, value):
         match(address):
             case 0b0000 : pass
@@ -107,16 +132,16 @@ class Core():
             case 0b1000 : self.write_any(value)
             case 0b1001 : self.write_last(value)
             case 0b1010 : self.write_all(value)
-            case 0b1011 : pass # write from IO memory 
+            case 0b1011 : self.write_memory(value, self.memory_io) 
 
             case 0b1100 : self.program_counter = value
-            case 0b1101 : pass # write from program memory
+            case 0b1101 : self.write_memory(value, self.memory_program)
             case 0b1110 : pass # write block from general memory
-            case 0b1111 : pass # write value from general memory
+            case 0b1111 : self.write_memory(value, self.memory_general)
             case _: raise Exception(address)
 
     def write_immediate(self, value):
-        self.program_memory[self.program_counter+1].value = value
+        self.memory_program[self.program_counter+1].value = value
 
     def write_direction(self, direction, value):
         self.success = direction.write(value)
@@ -130,12 +155,14 @@ class Core():
     def write_all(self, value):
         pass
 
+    def write_memory(self, value, memory):
+        memory[self.get_immediate()].value = value
 
     def run(self):        
-        instruction = self.program_memory[self.program_counter].value
+        instruction = self.memory_program[self.program_counter].value
         self.decode(instruction)
 
-    #TODO: update this to use 'add(pc, imm), 0b1'
+    #TODO: update this to use 'add(pc, 0b1)'
     def update_program_counter(self):
         if self.success:
             self.program_counter += 1
