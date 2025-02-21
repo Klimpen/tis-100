@@ -5,14 +5,15 @@ from constants import *
 def main():
 
     cores = []
-    memory = [Byte()] * 2**11
+    memory = [Byte(0)] * 2**11
+    io = [Byte(0)] * 2**11
 
 
     #init cores - up/down wrapping and right/left wrapping - torus of cores!
     for i in range(0, CORES_WIDTH):
         sub_list = []
         for j in range(0, CORES_HEIGHT):
-            sub_list.append(Core(memory))
+            sub_list.append(Core(memory, io))
 
             if not j == 0:
                 sub_list[-1].left = sub_list[-2].right
@@ -26,6 +27,9 @@ def main():
 
         cores.append(sub_list)
 
+    for line in cores[0][0].draw():
+        print(line)
+
     while(True):
         # executes current instruction
         for sub_list in cores:
@@ -36,6 +40,8 @@ def main():
         for sub_list in cores:
             for core in sub_list:
                 core.update_program_counter()
+
+    
 
 
 if __name__ == "__main__":

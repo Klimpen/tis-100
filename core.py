@@ -14,7 +14,15 @@ class Core():
                                 Byte(0b10000010001),
                                 Byte(0b10100010001),
                                 Byte(0b11000010001),
-                                Byte(0b11100010001)]
+                                Byte(0b11100010001),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),]
         # self.program_memory = [Byte()] * 2**11 # set to 1000 for the moment, should put this as less?
         self.program_counter = 0
 
@@ -190,3 +198,74 @@ class Core():
             case 0b110: Instruction_Set.jez(self, dst, src)
             case 0b111: Instruction_Set.jgz(self, dst, src)
             case _: raise Exception(instruction)
+
+
+    def draw(self):
+        output = []
+        output.append(".----------------------.")
+        for i in range(0,16):
+            output.append(f"| {self.draw_decode(self.memory_program[i].value)} |")
+        output.append("*----------------------*")
+
+        output[0] += f"------."
+        output[1] += f"      |"
+        output[2] += f" ACC  |"
+        output[3] += f"{f" {self.acc.value} |":>7}"
+        output[4] += f"      |"
+        output[5] += f"------."
+        output[6] += f"      |"
+        output[7] += f" BAK  |"
+        output[8] += f"{f" {self.bak.value} |":>7}"
+        output[9] += f"      |"
+        
+
+        return output
+
+    def draw_decode(self, byte):
+        
+        instruction = (byte & 0b11100000000) // 256
+        dst         = (byte & 0b00011110000) // 16
+        src         = (byte & 0b00000001111)
+
+        instruction_name = self.name_instruction(instruction)
+        dst_name = self.name_address(dst)
+        src_name = self.name_address(src)
+
+        output = f"{instruction_name} {dst_name} {src_name}"
+        if output == "MOV NIL NIL":
+            output = ""
+        return f"{f"{output}":<20}"
+
+    def name_instruction(self, instruction):
+        match(instruction):
+            case 0b000: return "MOV"
+            case 0b001: return "HAS"
+            case 0b010: return "BSL"
+            case 0b011: return "CMP"
+            
+            case 0b100: return "ADD"
+            case 0b101: return "XOR"
+            case 0b110: return "JEZ"
+            case 0b111: return "JGZ"
+
+    def name_address(self, address):
+        match(address):
+            case 0b0000: return "NIL"
+            case 0b0001: return "ACC"
+            case 0b0010: return "BAK"
+            case 0b0011: return "IMM"
+            
+            case 0b0100: return "LEFT"
+            case 0b0101: return "RIGHT"
+            case 0b0110: return "UP"
+            case 0b0111: return "DOWN"
+            
+            case 0b1000: return "ANY"
+            case 0b1001: return "LAST"
+            case 0b1010: return "ALL"
+            case 0b1011: return "IO"
+            
+            case 0b1100: return "PC"
+            case 0b1101: return "PM"
+            case 0b1110: return "MB"
+            case 0b1111: return "MA"
