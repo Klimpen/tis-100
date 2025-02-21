@@ -27,10 +27,7 @@ def main():
 
         cores.append(sub_list)
 
-    # make it so all cores render
-    for line in cores[0][0].draw():
-        print(line)
-
+    test = True
     while(True):
         # executes current instruction
         for sub_list in cores:
@@ -41,7 +38,16 @@ def main():
         for sub_list in cores:
             for core in sub_list:
                 core.update_program_counter()
-
+        if test:
+            for sub_list in cores:
+                lines = [""] * 18
+                for core in sub_list:
+                    core_draw = core.draw()
+                    for i in range(0, len(core_draw)):
+                        lines[i]+=core_draw[i]
+                for line in lines:
+                    print(line)
+            test = False
     
 
 

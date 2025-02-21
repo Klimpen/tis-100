@@ -208,16 +208,23 @@ class Core():
         output.append("*----------------------*")
 
         output[0] += f"------."
-        output[1] += f"      |"
-        output[2] += f" ACC  |"
-        output[3] += f"{f" {self.acc.value} |":>7}"
-        output[4] += f"      |"
-        output[5] += f"------."
-        output[6] += f"      |"
-        output[7] += f" BAK  |"
+        output[1] += f"  PC  |"
+        output[2] += f"{f" {self.program_counter} |":>7}"
+        output[3] += f"------*"
+        output[4] += f"  ACC |"
+        output[5] += f"{f" {self.acc.value} |":>7}"
+        output[6] += f"------*"
+        output[7] += f"  BAK |"
         output[8] += f"{f" {self.bak.value} |":>7}"
-        output[9] += f"      |"
-        
+        output[9] += f"------*"
+        output[10] += f"RESULT|"
+        output[11] += f"{f" {self.result} |":>7}"
+        output[12] += f"------*"
+        output[13] += f" LAST |"
+        output[14] += f"{f"  |":>7}"
+        output[15] += f"------*"
+        output[16] += f"      |"
+        output[17] += f"------*"
 
         return output
 
