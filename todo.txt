@@ -1,3 +1,10 @@
-inter-core bus
-memory controller
-    'io -> screen' rendering
+
+has_last
+
+get_last
+
+write_last
+write_any
+write_all
+
+'io -> screen' rendering
