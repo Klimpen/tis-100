@@ -9,14 +9,15 @@ class Core():
         self.memory_io = memory_io
         self.memory_program = [Byte(0b00000010001), # test program
                                 Byte(0b00100010001),
+                                Byte(0b00011000011),
+                                Byte(0b00000000000),
                                 Byte(0b01000010001),
                                 Byte(0b01100010001),
                                 Byte(0b10000010001),
                                 Byte(0b10100010001),
                                 Byte(0b11000010001),
                                 Byte(0b11100010001),
-                                Byte(0b00011000011),
-                                Byte(0b00000000000),
+                                #Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
@@ -92,9 +93,9 @@ class Core():
 
     def get_immediate(self):
             self.program_counter += 1
-            self.program_counter %= 8
+            self.program_counter %= len(self.memory_program)
 
-            return self.program_memory[self.program_counter].value
+            return self.memory_program[self.program_counter].value
 
     def get_direction(self, direction):
         value = direction.read()
@@ -174,7 +175,7 @@ class Core():
     def update_program_counter(self):
         if self.success:
             self.program_counter += 1
-            self.program_counter %= 8
+            self.program_counter %= len(self.memory_program)
         else:
             self.success = True
 

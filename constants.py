@@ -1,4 +1,3 @@
-from enum import Enum
 
 # INSTRUCTIONS
 MOV = 0b000
