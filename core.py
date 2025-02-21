@@ -15,7 +15,7 @@ class Core():
                                 Byte(0b10100010001),
                                 Byte(0b11000010001),
                                 Byte(0b11100010001),
-                                Byte(0b00000000000),
+                                Byte(0b00011000011),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
@@ -204,7 +204,10 @@ class Core():
         output = []
         output.append(".----------------------.")
         for i in range(0,16):
-            output.append(f"| {self.draw_decode(self.memory_program[i].value)} |")
+            if i == self.program_counter:
+                output.append(f"| \033[7m{self.draw_decode(self.memory_program[i].value)}\033[27m |")
+            else:
+                output.append(f"| {self.draw_decode(self.memory_program[i].value)} |")
         output.append("*----------------------*")
 
         output[0] += f"------."

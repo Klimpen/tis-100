@@ -1,5 +1,6 @@
 from core import *
 from constants import *
+import os
 
 
 def main():
@@ -27,8 +28,18 @@ def main():
 
         cores.append(sub_list)
 
-    test = True
     while(True):
+        #draws state
+        os.system('cls||clear')
+        for sub_list in cores:
+            lines = [""] * 18
+            for core in sub_list:
+                core_draw = core.draw()
+                for i in range(0, len(core_draw)):
+                    lines[i]+=core_draw[i]
+            for line in lines:
+                print(line)
+
         # executes current instruction
         for sub_list in cores:
             for core in sub_list:
@@ -38,16 +49,6 @@ def main():
         for sub_list in cores:
             for core in sub_list:
                 core.update_program_counter()
-        if test:
-            for sub_list in cores:
-                lines = [""] * 18
-                for core in sub_list:
-                    core_draw = core.draw()
-                    for i in range(0, len(core_draw)):
-                        lines[i]+=core_draw[i]
-                for line in lines:
-                    print(line)
-            test = False
     
 
 
