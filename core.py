@@ -7,23 +7,23 @@ class Core():
         
         self.memory_general = memory_general
         self.memory_io = memory_io
-        self.memory_program = [Byte(0b00000010001), # test program
-                                Byte(0b00100010001),
-                                Byte(0b00011000011),
+        self.memory_program = [ Byte(0b00000010011), # MOV ACC IMM
+                                Byte(0b00000000001), # 1
+                                Byte(0b10000010010), # ADD ACC BAK
+                                Byte(0b10000100001), # ADD BAK ACC
+                                Byte(0b00011000011), # JMP PC IMM
+                                Byte(0b00000000001), # 0
                                 Byte(0b00000000000),
-                                Byte(0b01000010001),
-                                Byte(0b01100010001),
-                                Byte(0b10000010001),
-                                Byte(0b10100010001),
-                                Byte(0b11000010001),
-                                Byte(0b11100010001),
-                                #Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
+                                Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),
                                 Byte(0b00000000000),]
+        
         # self.program_memory = [Byte()] * 2**11 # set to 1000 for the moment, should put this as less?
         self.program_counter = 0
 
