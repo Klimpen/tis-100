@@ -127,28 +127,38 @@ class Core():
         return memory[self.get_immediate()].value
     
     def write_value(self, address, value):
+
+        checked_vaLue = self.check_value(value)
+
         match(address):
             case 0b0000 : pass
-            case 0b0001 : self.acc.value = value
-            case 0b0010 : self.bak.value = value
-            case 0b0011 : self.write_immediate(value)
+            case 0b0001 : self.acc.value = checked_vaLue
+            case 0b0010 : self.bak.value = checked_vaLue
+            case 0b0011 : self.write_immediate(checked_vaLue)
 
-            case 0b0100 : self.write_direction(self.left, value)
-            case 0b0101 : self.write_direction(self.right, value)
-            case 0b0110 : self.write_direction(self.up, value)
-            case 0b0111 : self.write_direction(self.down, value)
+            case 0b0100 : self.write_direction(self.left, checked_vaLue)
+            case 0b0101 : self.write_direction(self.right, checked_vaLue)
+            case 0b0110 : self.write_direction(self.up, checked_vaLue)
+            case 0b0111 : self.write_direction(self.down, checked_vaLue)
 
-            case 0b1000 : self.write_any(value)
-            case 0b1001 : self.write_last(value)
-            case 0b1010 : self.write_all(value)
-            case 0b1011 : self.write_memory(value, self.memory_io) 
+            case 0b1000 : self.write_any(checked_vaLue)
+            case 0b1001 : self.write_last(checked_vaLue)
+            case 0b1010 : self.write_all(checked_vaLue)
+            case 0b1011 : self.write_memory(checked_vaLue, self.memory_io) 
 
-            case 0b1100 : self.program_counter = value
-            case 0b1101 : self.write_memory(value, self.memory_program)
+            case 0b1100 : self.program_counter = checked_vaLue
+            case 0b1101 : self.write_memory(checked_vaLue, self.memory_program)
             case 0b1110 : pass # write block from general memory
-            case 0b1111 : self.write_memory(value, self.memory_general)
+            case 0b1111 : self.write_memory(checked_vaLue, self.memory_general)
             case _: raise Exception(address)
-
+    
+    def check_value(self, value):
+        if value > 1024:
+            value -= 2048
+        if value < -1024:
+            value += 2048
+        return value
+    
     def write_immediate(self, value):
         self.memory_program[self.program_counter+1].value = value
 

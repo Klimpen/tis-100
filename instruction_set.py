@@ -74,7 +74,7 @@ class Instruction_Set:
         src_value = core.get_value(src)
 
         ans = dst_value + src_value
-        
+
         core.write_value(dst, ans)
 
     # 101
