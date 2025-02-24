@@ -1,5 +1,7 @@
 from core import *
 from constants import *
+from parse_program import *
+from programs import *
 import os
 
 
@@ -9,12 +11,14 @@ def main():
     memory = [Byte(0)] * 2**11
     io = [Byte(0)] * 2**11
 
-
+    program = Programs.fib_gen()
+    program_core = Parse_Program(program[2:]).programs
+    
     #init cores - up/down wrapping and right/left wrapping - torus of cores!
-    for i in range(0, CORES_WIDTH):
+    for i in range(0, program[0]):
         sub_list = []
-        for j in range(0, CORES_HEIGHT):
-            sub_list.append(Core(memory, io))
+        for j in range(0, program[1]):
+            sub_list.append(Core(program_core[i*program[1]+j], memory, io))
 
             if not j == 0:
                 sub_list[-1].left = sub_list[-2].right

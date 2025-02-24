@@ -3,28 +3,12 @@ from instruction_set import *
 
 class Core():
 
-    def __init__(self, memory_general, memory_io):
+    def __init__(self, memory_program, memory_general, memory_io):
         
         self.memory_general = memory_general
         self.memory_io = memory_io
-        self.memory_program = [ Byte(0b00000010011), # MOV ACC IMM
-                                Byte(0b00000000001), # 1
-                                Byte(0b10000010010), # ADD ACC BAK
-                                Byte(0b10000100001), # ADD BAK ACC
-                                Byte(0b00011000011), # JMP PC IMM
-                                Byte(0b00000000001), # 0
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),
-                                Byte(0b00000000000),]
-        
-        # self.program_memory = [Byte()] * 2**11 # set to 1000 for the moment, should put this as less?
+        self.memory_program = memory_program
+    
         self.program_counter = 0
 
         self.acc = Byte(0b0)
@@ -68,7 +52,7 @@ class Core():
             self.down.send)
 
     def get_value(self, address):
-
+        
         match(address):
             case 0b0000: return 0b0 
             case 0b0001: return self.acc.value
@@ -193,11 +177,11 @@ class Core():
 #   Each instruction is 1 byte
 #   [3bit][4bit][4bit]
 #   instruction - dst address - src address
-    def decode(self, byte):
-
-        instruction = (byte & 0b11100000000) // 256
-        dst         = (byte & 0b00011110000) // 16
-        src         = (byte & 0b00000001111)
+    def decode(self, value):
+        
+        instruction = (value & 0b11100000000) // 256
+        dst         = (value & 0b00011110000) // 16
+        src         = (value & 0b00000001111)
 
         match(instruction):
             case 0b000: Instruction_Set.mov(self, dst, src)
@@ -215,7 +199,10 @@ class Core():
         output = []
         output.append(".----------------------.")
         for i in range(0,16):
-            if i == self.program_counter:
+            
+            if i >= len(self.memory_program):
+                output.append(f"| {self.draw_decode(00000000000)} |")
+            elif i == self.program_counter:
                 output.append(f"| \033[7m{self.draw_decode(self.memory_program[i].value)}\033[27m |")
             else:
                 output.append(f"| {self.draw_decode(self.memory_program[i].value)} |")
