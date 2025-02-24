@@ -10,4 +10,6 @@ write_all
 make it so all bus render
 make it so immediate values display as values, not instructions
 make it so we have a cursor
+
 make it so we can write to cores
+    load program on core init ! done

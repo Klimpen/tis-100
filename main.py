@@ -3,7 +3,7 @@ from constants import *
 from parse_program import *
 from programs import *
 import os
-
+from time import sleep
 
 def main():
 
@@ -34,7 +34,7 @@ def main():
 
     while(True):
         #draws state
-        os.system('cls||clear')
+        os.system('clear')
         for sub_list in cores:
             lines = [""] * 18
             for core in sub_list:
@@ -53,7 +53,8 @@ def main():
         for sub_list in cores:
             for core in sub_list:
                 core.update_program_counter()
-    
+        
+        sleep(0.25)
 
 
 if __name__ == "__main__":
