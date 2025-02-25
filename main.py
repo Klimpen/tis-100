@@ -2,6 +2,7 @@ from core import *
 from constants import *
 from parse_program import *
 from programs import *
+from draw import *
 import os
 from time import sleep
 
@@ -13,6 +14,7 @@ def main():
 
     program = Programs.fib_gen()
     program_core = Parse_Program(program[2:]).programs
+    draw = Draw()
     
     #init cores - up/down wrapping and right/left wrapping - torus of cores!
     for i in range(0, program[0]):
@@ -38,7 +40,7 @@ def main():
         for sub_list in cores:
             lines = [""] * 18
             for core in sub_list:
-                core_draw = core.draw()
+                core_draw = draw.draw(core)
                 for i in range(0, len(core_draw)):
                     lines[i]+=core_draw[i]
             for line in lines:
