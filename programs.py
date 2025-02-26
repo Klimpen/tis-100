@@ -49,6 +49,7 @@ class Programs:
                 MOV PM IMM
                 MOV PC IMM
                 ADD MA ACC
-                MOV PM ACC
+                MOV PM IMM
+                2
                 MOV PC IMM
-                -1''']
+                0''']

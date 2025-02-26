@@ -271,6 +271,8 @@ Writing from `IO` writes to the address defined by the `MA` register in io memor
 
 Program counter register. Specifies the address in `PM` of the next instruction to execute. Writing to this register has the same effect as an unconditional jump.
 
+If this is written to, it blocks `PC` being updated that cycle.
+
 A `PC` overflow is not an error, the program continues executing from `PC` = 0.
 
 ### 1101 PM

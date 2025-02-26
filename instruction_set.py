@@ -99,25 +99,21 @@ class Instruction_Set:
         # read src->src.value
         # if src.value == +/- 0
         # mov pc, dst
-        # dont update pc as we've written to it
         # print(f"JEZ: {dst}, {src}")
 
         src_value = core.get_value(src)
 
         if(src_value == 0):
             Instruction_Set.mov(core, PC, dst)
-            core.success = False
 
     # 111
     def jgz(core, dst, src):
         # read src->src.value
         # if src.value > +0
         # mov pc, dst
-        # dont update pc as we've written to it
         # print(f"JGZ: {dst}, {src}")
 
         src_value = core.get_value(src)
 
         if(src_value > 0):
             Instruction_Set.mov(core, PC, dst)
-            core.success = False

@@ -3,16 +3,25 @@ class Draw:
 
     def draw(self, core):
         output = []
+        page = core.program_counter // 16
         output.append(".----------------------.")
-        for i in range(0,16):
+        for i in range(page + 0, page + 16):
             if i >= len(core.memory_program):
                 output.append(f"| {self.draw_decode(00000000000)} |")
-            if output[i].count("IMM")>0:
-                output.append(f"| {core.memory_program[i].value:<20} |")
-            elif i == core.program_counter:
-                output.append(f"| \033[7m{self.draw_decode(core.memory_program[i].value)}\033[27m |")
             else:
-                output.append(f"| {self.draw_decode(core.memory_program[i].value)} |")
+                if i == core.program_counter:
+                    highlight_start = "\033[7m"
+                    highlight_end = "\033[27m"
+                else:
+                    highlight_start = ""
+                    highlight_end = ""
+
+                instruction = self.draw_decode(core.memory_program[i].value)
+                if instruction.count("IMM")>0:
+                    output.append(f"| {highlight_start}{f"{instruction} -> {core.memory_program[i].value}":<20}{highlight_end} |")
+                    i+=1
+                else:
+                    output.append(f"| {highlight_start}{f"{instruction}":<20}{highlight_end} |")
         output.append("*----------------------*")
 
         output[0] += f"------."
@@ -49,7 +58,7 @@ class Draw:
         output = f"{instruction_name} {dst_name} {src_name}"
         if output == "MOV NIL NIL":
             output = ""
-        return f"{f"{output}":<20}"
+        return f"{output}"
 
     def name_instruction(self, instruction):
         match(instruction):

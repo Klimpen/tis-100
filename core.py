@@ -134,7 +134,7 @@ class Core():
             case 0b1010 : self.write_all(checked_vaLue)
             case 0b1011 : self.write_memory(value, self.memory_io) 
 
-            case 0b1100 : self.program_counter = checked_vaLue
+            case 0b1100 : self.write_pc(checked_vaLue)
             case 0b1101 : self.write_memory(value, self.memory_program)
             case 0b1110 : self.memory_address = checked_vaLue
             case 0b1111 : self.write_memory(value, self.memory_general)
@@ -161,6 +161,10 @@ class Core():
 
     def write_all(self, value):
         pass
+
+    def write_pc(self, value):
+        self.program_counter = value
+        self.success = False
 
     def write_memory(self, value, memory):
         memory[self.memory_address].value = value
