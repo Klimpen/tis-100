@@ -33,3 +33,22 @@ class Programs:
                 ADD ACC BAK
                 MOV PC IMM
                 2''']
+    
+    def mutating_test_one():
+        return [1, 1,
+                ''' MOV ACC IMM
+                1
+                ADD MA ACC
+                ADD MA ACC
+                MOV PM IMM
+                ADD ACC BAK
+                ADD MA ACC
+                MOV PM IMM
+                ADD BAK ACC
+                ADD MA ACC
+                MOV PM IMM
+                MOV PC IMM
+                ADD MA ACC
+                MOV PM ACC
+                MOV PC IMM
+                -1''']

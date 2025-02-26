@@ -263,11 +263,9 @@ This requires further thought as to implementation or requirements.
 
 ### 1011 IO
 
-Reading from `IO` requests the memeory controller to access the IO memory->address passed and return its value.
+Reading from `IO` accesses the address defined by the `MA` register in io memory and returns the value stored there.
 
-Writing to `IO` requests the memeory controller to access the IO memory->address passed and set its value to the second value passed.
-
-The details of the memory controller are to be finalised.
+Writing from `IO` writes to the address defined by the `MA` register in io memory and returns the value stored there.
 
 ### 1100 PC
 
@@ -283,38 +281,29 @@ The program memory of the core.
 
 Writing to this has the effect of changing the program being executed.
 
+Reading from `PM` accesses the address defined by the `MA` register in program memory and returns the value stored there.
+
+Writing from `PM` writes to the address defined by the `MA` register in program memory and returns the value stored there.
+
 A program should return to `PC` = 0 at the end of the code block being executed.
 
 This may mean a 2 byte instruction is required:
     MOV `PC` `IMM`
     0x00000 00000
 
-### 1110 MB
+### 1110 MA
 
-This transfers a large number of values from one area of memory to another.
+The memory address register. `MA` is a special register used in reading and writing to a set of memory.
 
-Reading from `MB` requests the memeory controller to access and return a block of memory denoted by 2 values.
-- Value 1: The address of the first value to be returned.
-- Value 2: The number of values to be returned.
+The `MA` register defines the address accessed when executing `IO`, `PM` and `MEM`.
 
-Writing from `MB` places the requested values into a valid memory.
-- Value 1: The address of the first value to be returned.
-- There is no value 2 as that's denoted by the read side.
+### 1111 MEM
 
-The only valid write locations are IO memory, PM memory or another section of general purpose memory.
+The shared memory between all cores.
 
+Reading from `MEM` accesses the address defined by the `MA` register in general memory and returns the value stored there.
 
-The details of the memory controller are to be finalised.
-
-The utility of `MB` is to be further finalised.
-
-### 1111 MA
-
-Reading from `MA` requests the memeory controller to access the general memory->the address passed and return its value.
-
-Writing to `MA` requests the memeory controller to access the general memory->address passed and set its value to the second value passed.
-
-The details of the memory controller are to be finalised.
+Writing from `MEM` writes to the address defined by the `MA` register in general memory and stores the specified value there.
 
 ## Value representation
 

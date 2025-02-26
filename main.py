@@ -12,7 +12,7 @@ def main():
     memory = [Byte(0)] * 2**11
     io = [Byte(0)] * 2**11
 
-    program = Programs.add_and_fib()
+    program = Programs.mutating_test_one()
     program_core = Parse_Program(program[2:]).programs
     draw = Draw()
     
@@ -21,16 +21,16 @@ def main():
         sub_list = []
         for j in range(0, program[1]):
             sub_list.append(Core(program_core[i*program[1]+j], memory, io))
-
-            if not j == 0:
-                sub_list[-1].left = sub_list[-2].right
-            if j+1 == program[1]:
-                sub_list[0].left = sub_list[-1].right
-
-            if not i == 0:
-                cores[i-1][j].down = sub_list[-1].up
-            if i+1 == program[0]:
-                sub_list[-1].down = cores[0][j].up
+            if program[1] > 1:
+                if not j == 0:
+                    sub_list[-1].left = sub_list[-2].right
+                if j+1 == program[1]:
+                    sub_list[0].left = sub_list[-1].right
+            if program[0] > 1:
+                if not i == 0:
+                    cores[i-1][j].down = sub_list[-1].up
+                if i+1 == program[0]:
+                    sub_list[-1].down = cores[0][j].up
 
         cores.append(sub_list)
 

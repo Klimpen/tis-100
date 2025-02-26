@@ -6,7 +6,10 @@ class Core():
     def __init__(self, memory_program, memory_general, memory_io):
         
         self.memory_general = memory_general
+        self.memory_address = 0
+
         self.memory_io = memory_io
+
         self.memory_program = memory_program
     
         self.program_counter = 0
@@ -16,6 +19,7 @@ class Core():
 
         self.result = None      # TODO: Figure this - placeholder
         self.success = True     # DEFAULT = TRUE, reset to True each tick. False = do not increment program_counter; True = increment program_counter
+
 
         self.left = None        # contains a bus
         self.right = Bus()      # these bus are shared registers between adjacent cores
@@ -71,7 +75,7 @@ class Core():
 
             case 0b1100: return self.program_counter
             case 0b1101: return self.get_memory(self.memory_program)
-            case 0b1110: pass # read block from general memory
+            case 0b1110: return self.memory_address
             case 0b1111: return self.get_memory(self.memory_general)
             case _: raise Exception(address)
 
@@ -108,7 +112,7 @@ class Core():
         pass
 
     def get_memory(self, memory):
-        return memory[self.get_immediate()].value
+        return memory[self.memory_address].value
     
     def write_value(self, address, value):
 
@@ -128,12 +132,12 @@ class Core():
             case 0b1000 : self.write_any(checked_vaLue)
             case 0b1001 : self.write_last(checked_vaLue)
             case 0b1010 : self.write_all(checked_vaLue)
-            case 0b1011 : self.write_memory(checked_vaLue, self.memory_io) 
+            case 0b1011 : self.write_memory(value, self.memory_io) 
 
             case 0b1100 : self.program_counter = checked_vaLue
-            case 0b1101 : self.write_memory(checked_vaLue, self.memory_program)
-            case 0b1110 : pass # write block from general memory
-            case 0b1111 : self.write_memory(checked_vaLue, self.memory_general)
+            case 0b1101 : self.write_memory(value, self.memory_program)
+            case 0b1110 : self.memory_address = checked_vaLue
+            case 0b1111 : self.write_memory(value, self.memory_general)
             case _: raise Exception(address)
     
     def bounds_check(self, value):
@@ -159,7 +163,7 @@ class Core():
         pass
 
     def write_memory(self, value, memory):
-        memory[self.get_immediate()].value = value
+        memory[self.memory_address].value = value
 
     def run(self):        
         instruction = self.memory_program[self.program_counter].value
@@ -178,11 +182,12 @@ class Core():
 #   [3bit][4bit][4bit]
 #   instruction - dst address - src address
     def decode(self, value):
+
         
         instruction = (value >> 8)
         dst         = (value >> 4) & 0b0001111
         src         = (value & 0b00000001111)
-
+        
         match(instruction):
             case 0b000: Instruction_Set.mov(self, dst, src)
             case 0b001: Instruction_Set.has(self, dst, src)

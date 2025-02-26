@@ -46,7 +46,7 @@ class Parse_Program:
             case _: raise Exception("Wrong instruction input")
 
     def parse_address(self, address):
-
+        print(address)
         match(address):
             case "NIL": return NIL
             case "ACC": return ACC
@@ -65,8 +65,8 @@ class Parse_Program:
 
             case "PC": return PC
             case "PM": return PM
-            case "MB": return MB
             case "MA": return MA
+            case "MEM": return MEM
 
             case _: raise Exception("Wrong address input")
 

@@ -5,9 +5,10 @@ class Draw:
         output = []
         output.append(".----------------------.")
         for i in range(0,16):
-            
             if i >= len(core.memory_program):
                 output.append(f"| {self.draw_decode(00000000000)} |")
+            if output[i].count("IMM")>0:
+                output.append(f"| {core.memory_program[i].value:<20} |")
             elif i == core.program_counter:
                 output.append(f"| \033[7m{self.draw_decode(core.memory_program[i].value)}\033[27m |")
             else:
@@ -27,8 +28,8 @@ class Draw:
         output[10] += f"RESULT|"
         output[11] += f"{f" {core.result} |":>7}"
         output[12] += f"------*"
-        output[13] += f" LAST |"
-        output[14] += f"{f"  |":>7}"
+        output[13] += f"   MA |"
+        output[14] += f"{f" {core.memory_address} |":>7}"
         output[15] += f"------*"
         output[16] += f"      |"
         output[17] += f"------*"

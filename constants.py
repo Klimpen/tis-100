@@ -2,7 +2,7 @@
 # INSTRUCTIONS
 MOV = 0b000
 HAS = 0b001
-BSL = 0b010 # UNSURE - BIT SHIFT LEFT?
+BSL = 0b010 
 CMP = 0b011
 
 ADD = 0b100
@@ -24,12 +24,12 @@ DOWN  = 0b0111
 ANY   = 0b1000
 LAST  = 0b1001
 ALL   = 0b1010
-IO    = 0b1011 # UNSURE - ADDRESSABLE MEMORY IS SMALLER THAN SCREEN [160x60 char]
+IO    = 0b1011 
 
 PC    = 0b1100 #program counter
 PM    = 0b1101 #program memory
-MB    = 0b1110 #memory block
-MA    = 0b1111 #memory address
+MA    = 0b1110 #memory address - used to read/write io/program/general memory
+MEM    = 0b1111 #general memory
 
 # A byte is 11 bits in this architecture
 class Byte():
