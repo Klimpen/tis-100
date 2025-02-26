@@ -9,23 +9,29 @@ class Draw:
             if i >= len(core.memory_program):
                 output.append(f"| {self.draw_decode(00000000000)} |")
             else:
-                if i == core.program_counter:
-                    highlight_start = "\033[7m"
-                    highlight_end = "\033[27m"
-                else:
-                    highlight_start = ""
-                    highlight_end = ""
-
                 instruction = self.draw_decode(core.memory_program[i].value)
-                if instruction.count("IMM")>0:
-                    output.append(f"| {highlight_start}{f"{instruction} -> {core.memory_program[i].value}":<20}{highlight_end} |")
-                    i+=1
+                if output[i].count("IMM")>0:
+                    if i-1 == core.program_counter:
+                        highlight_start = "\033[7m"
+                        highlight_end = "\033[27m"
+                    else:
+                        highlight_start = ""
+                        highlight_end = ""
+                    output.append(f"| {highlight_start}{f"{core.memory_program[i].value}":<20}{highlight_end} |")
                 else:
+                    
+                    if i == core.program_counter:
+                        highlight_start = "\033[7m"
+                        highlight_end = "\033[27m"
+                    else:
+                        highlight_start = ""
+                        highlight_end = ""
                     output.append(f"| {highlight_start}{f"{instruction}":<20}{highlight_end} |")
+                    
         output.append("*----------------------*")
 
         output[0] += f"------."
-        output[1] += f"  PC  |"
+        output[1] += f"   PC |"
         output[2] += f"{f" {core.program_counter} |":>7}"
         output[3] += f"------*"
         output[4] += f"  ACC |"
