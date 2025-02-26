@@ -82,5 +82,5 @@ class Draw:
             
             case 0b1100: return "PC"
             case 0b1101: return "PM"
-            case 0b1110: return "MB"
-            case 0b1111: return "MA"
+            case 0b1110: return "MA"
+            case 0b1111: return "MEM"
