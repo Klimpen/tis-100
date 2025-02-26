@@ -12,7 +12,7 @@ def main():
     memory = [Byte(0)] * 2**11
     io = [Byte(0)] * 2**11
 
-    program = Programs.fib_gen()
+    program = Programs.add_and_fib()
     program_core = Parse_Program(program[2:]).programs
     draw = Draw()
     

@@ -31,11 +31,6 @@ PM    = 0b1101 #program memory
 MB    = 0b1110 #memory block
 MA    = 0b1111 #memory address
 
-# VALUES
-
-CORES_WIDTH = 2
-CORES_HEIGHT = 2
-
 # A byte is 11 bits in this architecture
 class Byte():
 

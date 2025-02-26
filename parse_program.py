@@ -5,9 +5,6 @@ class Parse_Program:
     programs = []
 
     def __init__(self, input):
-        
-        self.height = CORES_HEIGHT
-        self.width = CORES_WIDTH
 
         for program in input:
             self.programs.append(self.parse_core(program))
@@ -21,7 +18,7 @@ class Parse_Program:
     def parse_line(self, line):
 
         words = line.split()
-
+        print(f"{line} -> {words}")
         if len(words) == 1:
             output = Byte(int(words[0]))
             return output

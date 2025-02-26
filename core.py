@@ -179,7 +179,7 @@ class Core():
 #   instruction - dst address - src address
     def decode(self, value):
         
-        instruction = (value >> 8) & 0b111
+        instruction = (value >> 8)
         dst         = (value >> 4) & 0b0001111
         src         = (value & 0b00000001111)
 
