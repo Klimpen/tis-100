@@ -24,12 +24,12 @@ def main():
 
             if not j == 0:
                 sub_list[-1].left = sub_list[-2].right
-            if j+1 == CORES_HEIGHT:
+            if j+1 == program[1]:
                 sub_list[0].left = sub_list[-1].right
 
             if not i == 0:
                 cores[i-1][j].down = sub_list[-1].up
-            if i+1 == CORES_WIDTH:
+            if i+1 == program[0]:
                 sub_list[-1].down = cores[0][j].up
 
         cores.append(sub_list)
