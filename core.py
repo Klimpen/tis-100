@@ -26,6 +26,16 @@ class Core():
         self.up = Bus()
         self.down = None
 
+        self.last_left = False
+        self.last_right = False
+        self.last_up = False
+        self.last_down = False
+
+        self.curr_left = False
+        self.curr_right = False
+        self.curr_up = False
+        self.curr_down = False
+
     def has_value(self, address):
         match(address):
             case 0b0100: return self.left.send
@@ -46,7 +56,11 @@ class Core():
             self.down.send)
 
     def has_last(self):
-        pass
+        return (
+            (self.left.send and self.last_left) or
+            (self.right.send and self.last_right) or
+            (self.up.send and self.last_up) or
+            (self.down.send and self.last_down))
 
     def has_all(self):
         return (
@@ -109,7 +123,15 @@ class Core():
         return output
 
     def get_last(self):
-        pass
+        output = None
+
+        if self.has_last(self):
+            if self.left.send and self.last_left: self.get_direction(self.left)
+            if self.right.send and self.last_right: self.get_direction(self.right)
+            if self.up.send and self.last_up: self.get_direction(self.up)
+            if self.down.send and self.last_down: self.get_direction(self.down)
+            return output
+            
 
     def get_memory(self, memory):
         return memory[self.memory_address].value
@@ -174,12 +196,17 @@ class Core():
         self.decode(instruction)
 
     #TODO: update this to use 'add(pc, 0b1)'
-    def update_program_counter(self):
+    def update(self):
         if self.success:
             self.program_counter += 1
             self.program_counter %= len(self.memory_program)
         else:
             self.success = True
+
+        self.last_left = self.curr_left
+        self.last_right = self.curr_right
+        self.last_up = self.curr_up
+        self.last_down = self.curr_down
 
 
 #   Each instruction is 1 byte

@@ -16,7 +16,6 @@ def main():
     program_core = Parse_Program(program[2:]).programs
     draw = Draw()
     
-    #init cores - up/down wrapping and right/left wrapping - torus of cores!
     for i in range(0, program[0]):
         sub_list = []
         for j in range(0, program[1]):
@@ -35,29 +34,31 @@ def main():
         cores.append(sub_list)
 
     while(True):
-        #draws state
-        os.system('clear')
-        for sub_list in cores:
-            lines = [""] * 18
-            for core in sub_list:
-                core_draw = draw.draw(core)
-                for i in range(0, len(core_draw)):
-                    lines[i]+=core_draw[i]
-            for line in lines:
-                print(line)
-
-        # executes current instruction
-        for sub_list in cores:
-            for core in sub_list:
-                core.run()
-        
-        # updates pc
-        for sub_list in cores:
-            for core in sub_list:
-                core.update_program_counter()
-        
+        render(draw, cores)
+        run(cores)
+        update(cores)
         sleep(0.25)
 
+def render(draw, cores):
+    os.system('clear')
+    for sub_list in cores:
+        lines = [""] * 18
+        for core in sub_list:
+            core_draw = draw.draw(core)
+            for i in range(0, len(core_draw)):
+                lines[i]+=core_draw[i]
+        for line in lines:
+            print(line)
+
+def run(cores):
+    for sub_list in cores:
+        for core in sub_list:
+            core.run()
+
+def update(cores):
+    for sub_list in cores:
+        for core in sub_list:
+            core.update()
 
 if __name__ == "__main__":
     main()

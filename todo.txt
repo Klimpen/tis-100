@@ -9,3 +9,7 @@ write_all
 
 make it so all bus render
 make it so we have a cursor
+
+make it so render is done off memory_io
+    for byte in memory_io
+        draw(byte)
