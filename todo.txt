@@ -1,4 +1,5 @@
-
+has_last
+get_last
 write_last
 write_any
 write_all
