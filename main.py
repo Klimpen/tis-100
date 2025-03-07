@@ -11,6 +11,7 @@ def main():
     cores = []
     memory = [Byte(0)] * 2**11
     io = [Byte(0)] * 2**11
+    read_io = Byte(0)
 
     program = Programs.mutating_test_one()
     program_core = Parse_Program(program[2:]).programs
@@ -19,7 +20,7 @@ def main():
     for i in range(0, program[0]):
         sub_list = []
         for j in range(0, program[1]):
-            sub_list.append(Core(program_core[i*program[1]+j], memory, io))
+            sub_list.append(Core(program_core[i*program[1]+j], memory, io, read_io))
             if program[1] > 1:
                 if not j == 0:
                     sub_list[-1].left = sub_list[-2].right
@@ -37,7 +38,7 @@ def main():
         render(draw, cores)
         run(cores)
         update(cores)
-        sleep(0.25)
+        sleep(0.5)
 
 def render(draw, cores):
     os.system('clear')

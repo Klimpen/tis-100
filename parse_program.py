@@ -18,7 +18,6 @@ class Parse_Program:
     def parse_line(self, line):
 
         words = line.split()
-        print(f"{line} -> {words}")
         if len(words) == 1:
             output = Byte(int(words[0]))
             return output
@@ -46,7 +45,6 @@ class Parse_Program:
             case _: raise Exception("Wrong instruction input")
 
     def parse_address(self, address):
-        print(address)
         match(address):
             case "NIL": return NIL
             case "ACC": return ACC

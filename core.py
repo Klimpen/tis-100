@@ -3,12 +3,13 @@ from instruction_set import *
 
 class Core():
 
-    def __init__(self, memory_program, memory_general, memory_io):
+    def __init__(self, memory_program, memory_general, memory_io, read_io):
         
         self.memory_general = memory_general
         self.memory_address = 0
 
         self.memory_io = memory_io
+        self.read_io = read_io
 
         self.memory_program = memory_program
     
@@ -85,7 +86,7 @@ class Core():
             case 0b1000: return self.get_any()
             case 0b1001: return self.get_last()
             case 0b1010: raise Exception("Cannot read from ALL") # cannot read from ALL
-            case 0b1011: return self.get_memory(self.memory_io)
+            case 0b1011: return self.read_io
 
             case 0b1100: return self.program_counter
             case 0b1101: return self.get_memory(self.memory_program)
