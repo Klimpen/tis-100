@@ -1,6 +1,6 @@
 from constants import *
 
-class Instruction_Set:
+class InstructionSet:
     # 000
     def mov(core, dst, src):
         # places the value of src in dst
@@ -104,7 +104,7 @@ class Instruction_Set:
         src_value = core.get_value(src)
 
         if(src_value == 0):
-            Instruction_Set.mov(core, PC, dst)
+            InstructionSet.mov(core, Instruction.PC, dst)
 
     # 111
     def jgz(core, dst, src):
@@ -116,4 +116,4 @@ class Instruction_Set:
         src_value = core.get_value(src)
 
         if(src_value > 0):
-            Instruction_Set.mov(core, PC, dst)
+            InstructionSet.mov(core, Instruction.PC, dst)
