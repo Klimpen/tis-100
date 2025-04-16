@@ -104,7 +104,7 @@ class InstructionSet:
         src_value = core.get_value(src)
 
         if(src_value == 0):
-            InstructionSet.mov(core, Instruction.PC, dst)
+            InstructionSet.mov(core, Register.PC, dst)
 
     # 111
     def jgz(core, dst, src):
@@ -116,4 +116,4 @@ class InstructionSet:
         src_value = core.get_value(src)
 
         if(src_value > 0):
-            InstructionSet.mov(core, Instruction.PC, dst)
+            InstructionSet.mov(core, Register.PC, dst)

@@ -140,7 +140,7 @@ class Core():
             return output
         
         # case: there is not something to get
-        self.blocked = False
+        self.blocked = True
         return output
 
     def get_last(self) -> Optional[Byte]:
